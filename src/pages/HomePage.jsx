@@ -5,8 +5,7 @@ function HomePage() {
   return (
     <>
     <div>
-      <h1>Twitter clone</h1>
-      <h2>Home page</h2>
+      <h1>Home page</h1>
     </div>
     </>
   )
