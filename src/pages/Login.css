@@ -1,0 +1,21 @@
+h1 {
+    color: white;
+    font-size: 5rem;
+}
+
+.auth-options {
+    margin: auto;
+    margin-top: 100px;
+    border-radius: 5%;
+    background-color: #2A2A2A;
+    width: 520px;
+    height: 280px;
+}
+
+.auth-buttons {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    border: 1px solid red;
+}
