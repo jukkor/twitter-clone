@@ -1,0 +1,19 @@
+.sidebar {
+    top: 0;
+    left: 0;
+    width: 15.6%;
+    height: 100%;
+    position: fixed;
+    background-color: #000000;
+}
+
+h1 {
+    color: #c6c6c6;
+    text-align: center;
+}
+
+a {
+    font-size: 2rem;
+    color: #c6c6c6;
+    text-decoration: none;
+}

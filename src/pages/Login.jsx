@@ -1,0 +1,14 @@
+import './../App.css'
+
+function Login() {
+
+  return (
+    <>
+    <div>
+      <h1>Login/sign up page</h1>
+    </div>
+    </>
+  )
+}
+
+export default Login;
