@@ -13,6 +13,7 @@ import Login from "./pages/Login.jsx";
 import Profile from "./pages/Profile.jsx";
 
 import "./index.css";
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 
 const router = createBrowserRouter([
@@ -21,20 +22,24 @@ const router = createBrowserRouter([
     element: <Navigate replace to="/home" />,
   },
   {
-    path: "/home",
-    element: <HomePage />,
-  },
-  {
     path: "/login",
     element: <Login />,
   },
   {
-    path: "/explore",
-    element: <ExplorePage />,
+    path: "/home",
+    element: <ProtectedRoute> <HomePage /> </ProtectedRoute>,
   },
   {
-    path: "/user/example",
-    element: <Profile />,
+    path: "/explore",
+    element: <ProtectedRoute> <ExplorePage /> </ProtectedRoute>,
+  },
+  {
+    path: "/user/:id",
+    element: <ProtectedRoute> <Profile /> </ProtectedRoute>,
+  },
+  {
+    path: "*",
+    element: <Navigate replace to="/home" />,
   },
 ]);
 
