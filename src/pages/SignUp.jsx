@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { signInWithEmailAndPassword, signInWithPhoneNumber, RecaptchaVerifier, onAuthStateChanged, createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase/firebase';
 import { useUser } from '../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
@@ -12,12 +12,16 @@ import email from '../assets/email.png';
 import phone from '../assets/phone.png';
 
 const SignUp = () => {
-
-    const [showEmailModal, setShowEmailModal] = useState(false);
-
     const { setUser } = useUser();
+    const { user } = useUser();
+    const [showEmailModal, setShowEmailModal] = useState(false);
+    const navigate = useNavigate();
 
-    const handleEmailLogin = async (email, password) => {
+    if (user) {
+        navigate("/home");
+    }
+
+    const handleEmailSignUp = async (email, password) => {
 
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -55,7 +59,7 @@ const SignUp = () => {
                         {showEmailModal && (
                             <EmailLoginModal
                                 onClose={() => setShowEmailModal(false)}
-                                onLogin={handleEmailLogin}
+                                onLogin={handleEmailSignUp}
                             />
                         )}
                     </div>

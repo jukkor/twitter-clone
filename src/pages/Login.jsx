@@ -14,9 +14,13 @@ import phone from '../assets/phone.png';
 
 const Login = () => {
   const { setUser } = useUser();
+  const { user } = useUser();
   const [showEmailModal, setShowEmailModal] = useState(false);
   const navigate = useNavigate();
 
+  if (user) {
+    navigate("/home");
+  }
 
   const handleEmailLogin = async (email, password) => {
     try {
