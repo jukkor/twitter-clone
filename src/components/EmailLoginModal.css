@@ -1,0 +1,30 @@
+input {
+    background-color: #dfdfdf;
+    align-self: center;
+    width: 260px;
+    height: 2em;
+    margin: 5px 0px;
+}
+
+.modal button {
+    width: 100%;
+    margin-top: 5px;
+}
+
+.logo-text {
+    margin: 0.67em;
+}
+
+.modal {
+    display: flex;
+    align-items: center;
+    background-color: #1A1A1A;
+    flex-direction: column;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 310px;
+}

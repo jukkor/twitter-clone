@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 
-const EmailLoginModal = ({ onClose, onLogin }) => {
+import "./EmailLoginModal.css";
+
+const EmailLoginModal = ({ handleOnClose, handleOnClick }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     return (
         <div className="modal">
             <div className="modal-content">
-                <h2>Email Login</h2>
+                <h3>Email</h3>
                 <input
                     type="email"
                     placeholder="Email"
@@ -20,8 +22,8 @@ const EmailLoginModal = ({ onClose, onLogin }) => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <button onClick={() => onLogin(email, password)}>Sign In</button>
-                <button onClick={onClose}>Close</button>
+                <button onClick={() => handleOnClick(email, password)}>Proceed</button>
+                <button onClick={handleOnClose}>Close</button>
             </div>
         </div>
     );

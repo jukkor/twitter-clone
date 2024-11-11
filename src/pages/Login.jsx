@@ -44,21 +44,25 @@ const Login = () => {
       <div className="auth-container">
         <div className="auth-options-container">
           <div className="auth-option">
-            <img src={google}></img>
-            <button>Sign in with Google</button>
+            <div>
+              <img src={google}></img>
+              <button>Login with Google</button>
+            </div>
           </div>
           <div className="auth-option">
             <img src={facebook}></img>
-            <button>Sign in with Facebook</button>
+            <button>Login with Facebook</button>
           </div>
           <div className="auth-option">
-            <img src={email}></img>
-            <button onClick={() => setShowEmailModal(true)}>Sign in with Email</button>
+            <div>
+              <img src={email}></img>
+              <button onClick={() => setShowEmailModal(true)}>Login with Email</button>
+            </div>
             {/* Email Login Modal */}
             {showEmailModal && (
               <EmailLoginModal
-                onClose={() => setShowEmailModal(false)}
-                onLogin={handleEmailLogin}
+                handleOnClose={() => setShowEmailModal(false)}
+                handleOnClick={handleEmailLogin}
               />
             )}
           </div>
@@ -67,7 +71,7 @@ const Login = () => {
             <button onClick={() => {
               // setupRecaptcha();
               // setShowPhoneModal();
-            }}>Sign in with Phone</button>
+            }}>Login with Phone</button>
           </div>
         </div>
         <a href='/signup'>Don't have an account? Sign up here!</a>
