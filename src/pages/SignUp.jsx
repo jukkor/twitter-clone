@@ -3,6 +3,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase/firebase';
 import { useUser } from '../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
+
 import EmailLoginModal from '../components/EmailLoginModal';
 
 import './Login.css'
@@ -22,7 +23,6 @@ const SignUp = () => {
     }
 
     const handleEmailSignUp = async (email, password) => {
-
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
@@ -58,8 +58,8 @@ const SignUp = () => {
                         {/* Email Login Modal */}
                         {showEmailModal && (
                             <EmailLoginModal
-                                onClose={() => setShowEmailModal(false)}
-                                onLogin={handleEmailSignUp}
+                                handleOnClose={() => setShowEmailModal(false)}
+                                handleOnClick={handleEmailSignUp}
                             />
                         )}
                     </div>
