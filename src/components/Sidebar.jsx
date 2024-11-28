@@ -1,6 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/firebase';
+
 import './Sidebar.css';
+
+import TweetButton from './TweetButton';
 
 const Sidebar = () => {
 
@@ -31,7 +34,8 @@ const Sidebar = () => {
             </li>
           </ul>
         </nav>
-        <ul>
+        <TweetButton/>
+        <ul className="logout-button">
           <a onClick={handleSignOut} >Sign Out</a>
         </ul>
       </div>
