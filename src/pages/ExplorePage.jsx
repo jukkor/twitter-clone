@@ -25,11 +25,11 @@ function ExplorePage() {
         }));
         setTweets(tweetsArray);
       } else {
-        setTweets([]); // No tweets in the database
+        setTweets([]);
       }
     });
 
-    return () => unsubscribe(); // Cleanup listener on unmount
+    return () => unsubscribe();
   }, []);
 
   return (

@@ -24,7 +24,6 @@ const TweetButton = () => {
     if (tweetContent.length > 0) {
       console.log("Tweet submitted");
 
-      // Create a new tweet object with attributes
       const newTweet = {
         content: tweetContent,
         userId: auth.currentUser.uid,
@@ -33,7 +32,6 @@ const TweetButton = () => {
         media: "placeholder"
       };
 
-      // Push the new tweet object to the database
       const newTweetRef = push(ref(db, "tweets"));
       set(newTweetRef, newTweet)
         .then(() => {
