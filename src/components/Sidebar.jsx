@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/firebase';
-import './Sidebar.css'
+import './Sidebar.css';
 
-function Sidebar() {
+const Sidebar = () => {
 
   const navigate = useNavigate();
 
@@ -14,26 +14,26 @@ function Sidebar() {
   return (
     <>
       <div className="sidebar">
-        <h1>Twitter clone</h1>
-        <nav>
+        <h2>Twitter clone</h2>
+        <nav className="sidebar-tabs">
           <ul>
-            <li>
+            <li className={location.pathname === "/home" ? "active-link" : ""}>
               <a href={`/home`}>Home</a>
             </li>
-            <li>
+            <li className={location.pathname === "/explore" ? "active-link" : ""}>
               <a href={`/explore`}>Explore</a>
             </li>
           </ul>
 
           <ul>
-            <li>
+            <li className={location.pathname === "/user/example" ? "active-link" : ""}>
               <a href={`/user/example`}>Profile</a>
             </li>
           </ul>
         </nav>
-        <div>
+        <ul>
           <a onClick={handleSignOut} >Sign Out</a>
-        </div>
+        </ul>
       </div>
     </>
   )
