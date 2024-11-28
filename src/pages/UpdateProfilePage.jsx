@@ -1,12 +1,15 @@
 import { db, auth } from "../firebase/firebase";
 import { updateProfile } from "firebase/auth";
 import { set, ref } from "firebase/database";
+import { useNavigate } from "react-router-dom";
 
 import "./UpdateProfilePage.css";
+
 
 const UpdateProfilePage = () => {
 
     console.log(auth.currentUser);
+    const navigate = useNavigate();
 
     const submitForm = (e) => {
         e.preventDefault();
@@ -19,6 +22,7 @@ const UpdateProfilePage = () => {
 
         updateAuthUser(authPayload);
         updateRealtimeDatabaseUser(formPayload);
+        navigate("/home");
     }
 
     const updateAuthUser = (authPayload) => {
@@ -50,7 +54,7 @@ const UpdateProfilePage = () => {
                     <h1>Twitter clone</h1>
                 </div>
                 <div className="logo-text">
-                    <h2>Create Profile</h2>
+                    <h2>Update Profile</h2>
                 </div>
                 <div className="auth-container">
                     <div className="auth-options-container">
