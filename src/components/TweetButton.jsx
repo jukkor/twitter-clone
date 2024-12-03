@@ -27,6 +27,7 @@ const TweetButton = () => {
       const newTweet = {
         content: tweetContent,
         userId: auth.currentUser.uid,
+        displayName: auth.currentUser.displayName,
         createdAt: new Date().toISOString(),
         likeCount: 0,
         media: "placeholder"
