@@ -1,6 +1,6 @@
 import Sidebar from '../components/Sidebar';
 
-function Profile() {
+const Profile = () => {
 
   return (
     <>

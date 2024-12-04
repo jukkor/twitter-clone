@@ -6,7 +6,7 @@ import Sidebar from '../components/Sidebar';
 import TweetList from '../components/TweetList';
 import { useUser } from '../contexts/UserContext';
 
-function ExplorePage() {
+const ExplorePage = () => {
   const [tweets, setTweets] = useState([]);
   const { user } = useUser();
 
