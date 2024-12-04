@@ -24,6 +24,7 @@ const ExplorePage = () => {
 
             return {
               id: key,
+              userId: value.userId,
               username: userProfile?.displayName || null,
               profilePicture: userProfile?.photoURL || null,
               content: value.content,

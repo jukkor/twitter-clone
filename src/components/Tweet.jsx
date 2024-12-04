@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import './Tweet.css';
 
-function Tweet({profilePicture, username, content}) {
+function Tweet({profilePicture, username, content, userId}) {
 
     const navigate = useNavigate();
 
     const toProfile = () => {
-        navigate("/user/example");
+        navigate(`/user/${userId}`);
     }
 
 
