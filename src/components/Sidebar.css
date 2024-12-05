@@ -7,13 +7,22 @@
     background-color: #000000;
 }
 
+.sidebar-tabs {
+    display: flex;
+    flex-direction: column;
+}
+
 h1 {
     color: #c6c6c6;
     text-align: center;
 }
 
-a {
-    font-size: 2rem;
+.sidebar a {
     color: #c6c6c6;
     text-decoration: none;
+    font-size:xx-large;
+}
+
+.active-link a {
+    font-weight: bold;
 }
