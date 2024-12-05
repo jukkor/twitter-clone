@@ -1,8 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/firebase';
+
 import './Sidebar.css';
 
-function Sidebar() {
+import TweetButton from './TweetButton';
+
+const Sidebar = () => {
 
   const navigate = useNavigate();
 
@@ -20,7 +23,7 @@ function Sidebar() {
             <li className={location.pathname === "/home" ? "active-link" : ""}>
               <a href={`/home`}>Home</a>
             </li>
-            <li className={location.pathname === "/explore" ? "active-link" : ""}> 
+            <li className={location.pathname === "/explore" ? "active-link" : ""}>
               <a href={`/explore`}>Explore</a>
             </li>
           </ul>
@@ -31,7 +34,8 @@ function Sidebar() {
             </li>
           </ul>
         </nav>
-        <ul>
+        <TweetButton/>
+        <ul className="logout-button">
           <a onClick={handleSignOut} >Sign Out</a>
         </ul>
       </div>

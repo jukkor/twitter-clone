@@ -27,7 +27,7 @@ const SignUp = () => {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
             setUser(user);
-            useNavigate("/createprofile");
+            navigate("/updateprofile");
         } catch (error) {
             console.log(error.code, error.message);
         }

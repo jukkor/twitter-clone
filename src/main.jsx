@@ -11,6 +11,7 @@ import HomePage from "./pages/HomePage.jsx";
 import ExplorePage from "./pages/ExplorePage.jsx";
 import Login from "./pages/Login.jsx";
 import SignUp from "./pages/SignUp.jsx";
+import UpdateProfilePage from "./pages/UpdateProfilePage.jsx";
 import Profile from "./pages/Profile.jsx";
 
 import "./index.css";
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <SignUp />,
+  },
+  {
+    path: "/updateprofile",
+    element: <UpdateProfilePage />,
   },
   {
     path: "/home",
