@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from 'react';
 
 import { useParams } from 'react-router-dom';
-import { ref, onValue } from 'firebase/database';
+import { ref, onValue, get } from 'firebase/database';
 import { db } from '../firebase/firebase';
+import { useUser } from '../contexts/UserContext';
 
 import Sidebar from '../components/Sidebar';
+import TweetList from '../components/TweetList';
 
 import './Profile.css';
 
 const Profile = () => {
   let { id } = useParams();
+  const { user } = useUser();
 
   console.log(id);
+
+  const [userTweets, setUserTweets] = useState([]);
 
   const [profile, setProfile] = useState({
     displayName: '',
@@ -20,44 +25,75 @@ const Profile = () => {
   });
 
   useEffect(() => {
-
-    try {
-
-    const userRef = ref(db, `/users/${id}`);
-
-    const unsubscribe = onValue(userRef, (snapshot) => {
-
-      const data = snapshot.val();
-      console.log('Fetched data:', data);
-
-      if (data) {
-
-        setProfile({
-          displayName: data.displayName || 'No display name',
-          photoURL: data.photoURL || '',
-          bioText: data.bioText || 'No bio available',
+    const fetchUserProfile = async () => {
+      try {
+        const userRef = ref(db, `/users/${id}`);
+        const unsubscribeUser = onValue(userRef, (snapshot) => {
+          const data = snapshot.val();
+          console.log('Fetched user profile data:', data);
+  
+          if (data) {
+            setProfile({
+              displayName: data.displayName || 'No display name',
+              photoURL: data.photoURL || '',
+              bioText: data.bioText || 'No bio available',
+            });
+          } else {
+            setProfile({
+              displayName: 'No display name',
+              photoURL: '',
+              bioText: 'No bio available',
+            });
+          }
         });
-
-      } else {
-
-        setProfile({
-          displayName: 'No display name',
-          photoURL: '',
-          bioText: 'No bio available',
-        });
-    
+  
+        return () => unsubscribeUser();
+      } catch (error) {
+        console.log('Error fetching user profile:', error);
       }
-    });
-
-    return () => unsubscribe();
-      
-    } catch (error) {
-      
-      console.log("Error!")
-
-    }
-
+    };
+  
+    const fetchTweets = async () => {
+      try {
+        const tweetsRef = ref(db, 'tweets');
+        const unsubscribeTweets = onValue(tweetsRef, async (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            const tweetsArray = await Promise.all(
+              Object.entries(data).map(async ([key, value]) => {
+                const userRef = ref(db, `users/${value.userId}`);
+                const userSnapshot = await get(userRef);
+                const userProfile = userSnapshot.val();
+  
+                return {
+                  id: key,
+                  userId: value.userId,
+                  username: userProfile?.displayName || null,
+                  profilePicture: userProfile?.photoURL || null,
+                  content: value.content,
+                  likeCount: value.likeCount,
+                };
+              })
+            );
+  
+            setUserTweets(tweetsArray);
+          } else {
+            setUserTweets([]);
+          }
+        });
+  
+        return () => unsubscribeTweets;
+      } catch (error) {
+        console.log('Error fetching tweets:', error);
+      }
+    };
+    fetchUserProfile();
+    fetchTweets();
   }, [id]);
+  
+
+  const currentUserTweets = userTweets.filter(tweet => tweet.username === profile.displayName);
+  console.log(JSON.stringify(currentUserTweets));
 
   return (
     <>
@@ -75,6 +111,8 @@ const Profile = () => {
           <p className="bio-text">{profile.bioText}</p>
         </div>
       </div>
+      <h3 className="tweet-list-header">Tweets by {profile.displayName}:</h3>
+      <TweetList tweets={currentUserTweets} />
     </>
   );
 };

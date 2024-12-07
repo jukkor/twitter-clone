@@ -1,3 +1,5 @@
+import { useUser } from '../contexts/UserContext';
+import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/firebase';
 
@@ -7,7 +9,9 @@ import TweetButton from './TweetButton';
 
 const Sidebar = () => {
 
+  let { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useUser();
 
   const handleSignOut = () => {
     auth.signOut();
@@ -29,8 +33,8 @@ const Sidebar = () => {
           </ul>
 
           <ul>
-            <li className={location.pathname === "/user/example" ? "active-link" : ""}>
-              <a href={`/user/example`}>Profile</a>
+            <li className={location.pathname == `/user/${id}` ? "active-link" : ""}>
+              <a href={`/user/${user.uid}`}>Profile</a>
             </li>
           </ul>
         </nav>
