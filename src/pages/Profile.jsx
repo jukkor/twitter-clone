@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { useParams } from 'react-router-dom';
 import { ref, onValue, get } from 'firebase/database';
@@ -13,15 +14,13 @@ import './Profile.css';
 const Profile = () => {
   let { id } = useParams();
   const { user } = useUser();
-
-  console.log(id);
+  const navigate = useNavigate();
 
   const [userTweets, setUserTweets] = useState([]);
-
   const [profile, setProfile] = useState({
-    displayName: '',
-    photoURL: '',
-    bioText: '',
+    displayName: 'Loading...',
+    photoURL: 'https://static.vecteezy.com/system/resources/thumbnails/030/504/836/small_2x/avatar-account-flat-isolated-on-transparent-background-for-graphic-and-web-design-default-social-media-profile-photo-symbol-profile-and-people-silhouette-user-icon-vector.jpg',
+    bioText: 'Loading bio...',
   });
 
   useEffect(() => {
@@ -90,31 +89,67 @@ const Profile = () => {
     fetchUserProfile();
     fetchTweets();
   }, [id]);
+
+  const navigateToUpdateProfile = () => {
+    navigate('/updateprofile', { state: { profile }});
+  }
   
 
   const currentUserTweets = userTweets.filter(tweet => tweet.username === profile.displayName);
-  console.log(JSON.stringify(currentUserTweets));
+
+  let pageContent;
+
+  if (user.uid === id) {
+    console.log("Logged in user viewing own profile");
+    pageContent = (
+        <>
+            <Sidebar />
+            <div>
+                <div className="profile-box">
+                    <div className="name-and-picture-box">
+                        <img
+                            className="profile-picture" 
+                            src={profile.photoURL} 
+                            alt="Profile picture" 
+                        />
+                        <h2>{profile.displayName}</h2>
+                        <button className="edit-button" onClick={navigateToUpdateProfile}>Edit</button>
+                    </div>
+                    <p className="bio-text">{profile.bioText}</p>
+                </div>
+            </div>
+            <h3 className="tweet-list-header">Tweets by {profile.displayName}:</h3>
+            <TweetList tweets={currentUserTweets} />
+        </>
+    );
+} else {
+  pageContent = (
+    <>
+        <Sidebar />
+        <div>
+            <div className="profile-box">
+                <div className="name-and-picture-box">
+                    <img
+                        className="profile-picture" 
+                        src={profile.photoURL} 
+                        alt="Profile picture" 
+                    />
+                    <h2>{profile.displayName}</h2>
+                </div>
+                <p className="bio-text">{profile.bioText}</p>
+            </div>
+        </div>
+        <h3 className="tweet-list-header">Tweets by {profile.displayName}:</h3>
+        <TweetList tweets={currentUserTweets} />
+    </>
+  );
+}
 
   return (
     <>
-      <Sidebar />
-      <div>
-        <div className="profile-box">
-          <div className="name-and-picture-box">
-            <img
-              className="profile-picture" 
-              src={profile.photoURL} 
-              alt="Profile picture" 
-            />
-            <h2>{profile.displayName}</h2>
-          </div>
-          <p className="bio-text">{profile.bioText}</p>
-        </div>
-      </div>
-      <h3 className="tweet-list-header">Tweets by {profile.displayName}:</h3>
-      <TweetList tweets={currentUserTweets} />
+      {pageContent}
     </>
-  );
+  )
 };
 
 export default Profile;
