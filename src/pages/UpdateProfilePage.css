@@ -1,10 +1,38 @@
-label {
-    color: #c6c6c6;
-    text-align: center;
-}
-
 form {
     display: flex;
     flex-direction: column;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
     align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+label {
+    color: #c6c6c6;
+    text-align: right;
+    flex-basis: 100px;
+    text-align: left;
+}
+
+input,
+textarea {
+    flex-grow: 1;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-actions button {
+    border: 1px solid #c6c6c6;
+    border-radius: 5px;
 }
