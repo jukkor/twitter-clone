@@ -3,6 +3,7 @@ import { ref, get, set } from "firebase/database";
 import { updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase/firebase";
+
 import "./UpdateProfilePage.css";
 
 const UpdateProfilePage = () => {
@@ -86,26 +87,28 @@ const UpdateProfilePage = () => {
             <div className="logo-text">
                 <h2>Update Profile</h2>
             </div>
-            <div className="auth-container">
-                <div className="auth-options-container">
-                    <form onSubmit={submitForm}>
-                        <div>
-                            <label htmlFor="displayName">Display Name:</label>
-                            <input name="displayName" defaultValue={profile.displayName} />
-                        </div>
-                        <div>
-                            <label>Avatar Url:</label>
-                            <input name="photoURL" defaultValue={profile.photoURL} />
-                        </div>
-                        <div>
-                            <label>Bio Text:</label>
-                            <textarea name="bioText" defaultValue={profile.bioText}></textarea>
-                        </div>
-                        <button type="submit">Submit</button>
-                        <button onClick={handleFormCancel}>Cancel</button>
-                    </form>
+                <div className="auth-container">
+                    <div className="auth-options-container">
+                        <form onSubmit={submitForm}>
+                            <div className="form-group">
+                                <label htmlFor="displayName">Display Name:</label>
+                                <input name="displayName" defaultValue={profile.displayName} />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="photoURL">Avatar Url:</label>
+                                <input name="photoURL" defaultValue={profile.photoURL} />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="bioText">Bio Text:</label>
+                                <textarea name="bioText" defaultValue={profile.bioText}></textarea>
+                            </div>
+                            <div className="form-actions">
+                                <button type="submit">Submit</button>
+                                <button onClick={handleFormCancel}>Cancel</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
         </div>
     );
 };
