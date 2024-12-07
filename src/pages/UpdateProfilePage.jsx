@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase/firebase";
 import { getUser } from "../firebase/firebaseUtilities";
 import { useUser } from "../contexts/UserContext";
+import { updateUser } from "../firebase/firebaseUtilities";
 
 import Sidebar from "../components/Sidebar";
 
