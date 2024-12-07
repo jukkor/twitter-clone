@@ -1,54 +1,26 @@
-import { db, auth } from "../firebase/firebase";
-import { updateProfile } from "firebase/auth";
-import { set, ref } from "firebase/database";
+import { auth } from "../firebase/firebase";
 import { useNavigate } from "react-router-dom";
+import { getUser, updateUser } from "../firebase/firebaseUtilities";
+
+import Sidebar from "../components/Sidebar";
 
 import "./UpdateProfilePage.css";
 
-
 const UpdateProfilePage = () => {
-
-    console.log(auth.currentUser);
     const navigate = useNavigate();
 
-    const submitForm = (e) => {
+    const submitForm = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const formPayload = Object.fromEntries(formData);
-        const authPayload = { displayName: formPayload.displayName, photoURL: formPayload.photoURL };
-
-        console.log("Form payload", formPayload);
-        console.log("User before update:", auth.currentUser);
-
-        updateAuthUser(authPayload);
-        updateRealtimeDatabaseUser(formPayload);
+        updateUser(formPayload);
         navigate("/home");
     }
 
-    const updateAuthUser = (authPayload) => {
-        updateProfile(auth.currentUser, authPayload)
-            .then(() => {
-                console.log("User updated succesfully with the following information:", authPayload);
-                console.log("New User Data:", auth.currentUser);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
-
-    const updateRealtimeDatabaseUser = (formPayload) => {
-        set(ref(db, "users/" + auth.currentUser.uid), formPayload)
-            .then(() => {
-                console.log("Realtime DB User updated succesfully with the following:", formPayload);
-
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
 
     return (
         <>
+            <Sidebar />
             <div>
                 <div className="logo-text">
                     <h1>Twitter clone</h1>
