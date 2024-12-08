@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { getDatabase, ref, set, update, onValue } from "firebase/database";
-import { db, auth } from "../firebase/firebase";
+import { formatTimestamp, likeTweet, subscribeTweetLikeCount, subscribeUserHasLikedTweet, unLikeTweet } from "../firebase/firebaseUtilities";
 import { useState, useEffect } from 'react';
 
 import './Tweet.css';
@@ -15,42 +14,26 @@ function Tweet({ id, photoURL: profilePicture, displayName: username, content, u
     }
 
     const handleLike = () => {
-        const likesRef = ref(db, `tweetLikes/${id}`);
-
-        if (hasLiked) {
-            update(likesRef, {
-                [auth.currentUser.uid]: false
-            });
-        } else {
-            update(likesRef, {
-                [auth.currentUser.uid]: true
-            });
-        }
+        if (!hasLiked) likeTweet(id);
+        if (hasLiked) unLikeTweet(id);
     }
+
     useEffect(() => {
-        const likesRef = ref(db, `tweetLikes/${id}`);
+        const unsubscribeHasLiked = subscribeUserHasLikedTweet(id, setHasLiked);
+        const unsubscribeLikeCount = subscribeTweetLikeCount(id, setCurrentLikeCount);
+        return () => {
+            unsubscribeHasLiked();
+            unsubscribeLikeCount();
+        };
 
-        const unsubscribe = onValue(likesRef, (snapshot) => {
-            const likesData = snapshot.val();
-            if (likesData) {
-
-                const newLikeCount = Object.values(likesData).filter(like => like === true).length;
-                setCurrentLikeCount(newLikeCount);
-
-                setHasLiked(!!likesData[auth.currentUser.uid]);
-            }
-        });
-
-        return () => unsubscribe();
-
-    }, [id, handleLike]);
+    }, [id]);
 
     return (
         <div className="tweet-box">
             <div className="user-info">
                 <img className="tweet-profile-picture" src={profilePicture} onClick={toProfile} alt="Profile profile" />
                 <h3 className="profile-username" onClick={toProfile}>{username}</h3>
-                <p className="created-at-text">{createdAt}</p>
+                <p className="created-at-text">{formatTimestamp(createdAt)}</p>
             </div>
             <p className="tweet-text">{content}</p>
             <button onClick={handleLike} className="like-button">
