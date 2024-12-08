@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { useParams } from 'react-router-dom';
-import { ref, onValue, get } from 'firebase/database';
-import { db } from '../firebase/firebase';
 import { useUser } from '../contexts/UserContext';
-import { subscribeToTweets, subscribeToUser } from '../firebase/firebaseUtilities';
+import { followUser, subscribeIsFollowing, subscribeToTweets, subscribeToUser, unFollowUser } from '../firebase/firebaseUtilities';
 
 import Sidebar from '../components/Sidebar';
 import TweetList from '../components/TweetList';
@@ -18,6 +15,7 @@ const Profile = () => {
   const navigate = useNavigate();
 
   const [userTweets, setUserTweets] = useState([]);
+  const [isFollowing, setIsFollowing] = useState(false);
   const [profile, setProfile] = useState({
     displayName: 'Loading...',
     photoURL: 'https://static.vecteezy.com/system/resources/thumbnails/030/504/836/small_2x/avatar-account-flat-isolated-on-transparent-background-for-graphic-and-web-design-default-social-media-profile-photo-symbol-profile-and-people-silhouette-user-icon-vector.jpg',
@@ -27,10 +25,13 @@ const Profile = () => {
   useEffect(() => {
     const unsubscribeUser = subscribeToUser(id, setProfile);
     const unsubscribeTweets = subscribeToTweets(setUserTweets);
+    const unsubscribeFollowState = subscribeIsFollowing(id, setIsFollowing);
+
 
     return () => {
-      unsubscribeUser;
-      unsubscribeTweets;
+      unsubscribeUser();
+      unsubscribeTweets();
+      unsubscribeFollowState();
     }
   }, [id]);
 
@@ -38,8 +39,13 @@ const Profile = () => {
     navigate('/updateprofile', { state: { profile } });
   }
 
+  const handleFollow = () => {
+    if (!isFollowing) followUser(id);
+    if (isFollowing) unFollowUser(id);
+  }
 
-  const currentUserTweets = userTweets.filter(tweet => tweet.username === profile.displayName);
+
+  const currentUserTweets = userTweets.filter(tweet => tweet.displayName === profile.displayName);
 
   return (
     <>
@@ -54,6 +60,7 @@ const Profile = () => {
             />
             <h2>{profile.displayName}</h2>
             {user.uid === id ? <button className="edit-button" onClick={navigateToUpdateProfile}>Edit</button> : <></>}
+            {user.uid !== id ? <button className='edit-button' onClick={handleFollow}>{isFollowing ? "Unfollow" : "Follow"}</button> : <></>}
           </div>
           <p className="bio-text">{profile.bioText}</p>
         </div>
