@@ -8,6 +8,11 @@ import './Tweet.css';
 function Tweet({ id, profilePicture, username, content, userId, likeCount, createdAt }) {
     const [currentLikeCount, setCurrentLikeCount] = useState(likeCount);
     const [hasLiked, setHasLiked] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
+
     const navigate = useNavigate();
 
     const toProfile = () => {
@@ -45,8 +50,13 @@ function Tweet({ id, profilePicture, username, content, userId, likeCount, creat
 
     }, [id, handleLike]);
 
+    const handleModal = () => {
+        
+    }
+
     return (
-        <div className="tweet-box">
+        <>
+        <div className="tweet-box" onClick={openModal}>
             <div className="user-info">
                 <img className="tweet-profile-picture" src={profilePicture} onClick={toProfile} alt="Profile profile" />
                 <h3 className="profile-username" onClick={toProfile}>{username}</h3>
@@ -57,6 +67,23 @@ function Tweet({ id, profilePicture, username, content, userId, likeCount, creat
                 {hasLiked ? 'Unlike' : 'Like'} ({currentLikeCount})
             </button>
         </div>
+        {isModalOpen && (
+            <>
+              <div className="modal-tweet-overlay" onClick={closeModal}></div>
+                <div className="modal-tweet-box">
+                    <div className="modal-user-info">
+                        <img className="modal-tweet-profile-picture" src={profilePicture} onClick={toProfile} alt="Profile profile" />
+                        <h3 className="modal-profile-username" onClick={toProfile}>{username}</h3>
+                        <p className="modal-created-at-text">{createdAt}</p>
+                    </div>
+                    <p className="modal-tweet-text">{content}</p>
+                    <button onClick={handleLike} className="modal-like-button">
+                        {hasLiked ? 'Unlike' : 'Like'} ({currentLikeCount})
+                    </button>
+                </div>
+            </>
+          )}
+          </>
     )
 }
 
