@@ -41,11 +41,11 @@ const Profile = () => {
 
   const handleFollow = () => {
     if (!isFollowing) followUser(id);
-    if (isFollowing) unFollowUser();
+    if (isFollowing) unFollowUser(id);
   }
 
 
-  const currentUserTweets = userTweets.filter(tweet => tweet.username === profile.displayName);
+  const currentUserTweets = userTweets.filter(tweet => tweet.displayName === profile.displayName);
 
   return (
     <>

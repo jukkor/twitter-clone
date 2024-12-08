@@ -1,5 +1,5 @@
 import { updateProfile } from "firebase/auth";
-import { set, ref, onValue, get } from "firebase/database";
+import { set, ref, onValue, get, remove } from "firebase/database";
 import { db, auth } from "./firebase.js"
 
 export const updateUser = (payload) => {
@@ -72,8 +72,6 @@ export const subscribeToFollowedUsersTweets = (userId, callback) => {
                                 likeCount: tweetData.likeCount,
                             }
                             const payload = Object.assign(senderProfile, tweet);
-                            console.log(payload);
-
                             followedUserTweets.push(payload);
                         }
                     }
@@ -122,7 +120,6 @@ export const subscribeIsFollowing = (userIdToCheck, callback) => {
             if (snapshot.exists()) {
                 callback(snapshot.val());
             } else {
-                console.log('User not found');
                 callback(false);
             }
         });
@@ -146,8 +143,8 @@ export const subscribeToTweets = (callback) => {
                     return {
                         id: key,
                         userId: tweet.userId,
-                        username: userProfile?.displayName || null,
-                        profilePicture: userProfile?.photoURL || null,
+                        displayName: userProfile?.displayName || null,
+                        photoURL: userProfile?.photoURL || null,
                         content: tweet.content,
                         likeCount: tweet.likeCount,
                     };
