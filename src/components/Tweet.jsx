@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 
 import './Tweet.css';
 
-function Tweet({ id, profilePicture, username, content, userId, likeCount, createdAt }) {
+function Tweet({ id, photoURL: profilePicture, displayName: username, content, userId, likeCount, createdAt }) {
     const [currentLikeCount, setCurrentLikeCount] = useState(likeCount);
     const [hasLiked, setHasLiked] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,7 +34,7 @@ function Tweet({ id, profilePicture, username, content, userId, likeCount, creat
     }
     useEffect(() => {
         const likesRef = ref(db, `tweetLikes/${id}`);
-        
+
         const unsubscribe = onValue(likesRef, (snapshot) => {
             const likesData = snapshot.val();
             if (likesData) {

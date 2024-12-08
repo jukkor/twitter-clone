@@ -1,5 +1,5 @@
 import { updateProfile } from "firebase/auth";
-import { set, ref, onValue, get } from "firebase/database";
+import { set, ref, onValue, get, remove } from "firebase/database";
 import { db, auth } from "./firebase.js"
 
 export const updateUser = (payload) => {
@@ -41,7 +41,60 @@ export const getUser = async (uid) => {
     }
 }
 
-export const subscribeToUser = async (uid, callback) => {
+
+export const subscribeToFollowedUsersTweets = (userId, callback) => {
+    try {
+        const followingRef = ref(db, `following/${userId}`)
+
+        // Listen for changes in the list of followed users
+        const unsubscribe = onValue(followingRef, async (snapshot) => {
+            if (snapshot.exists()) {
+                const followedUsers = snapshot.val();
+
+                // Fetch all tweets and filter them based on followed users
+                const tweetsRef = ref(db, 'tweets');
+                const tweetsSnapshot = await get(tweetsRef);
+
+                if (tweetsSnapshot.exists()) {
+                    const allTweets = tweetsSnapshot.val();
+                    const followedUserTweets = [];
+
+                    // Loop through all tweets and check if the userId is in followed users
+                    for (const [tweetId, tweetData] of Object.entries(allTweets)) {
+                        const userId = tweetData.userId; // Assuming each tweet has a userId
+
+                        if (followedUsers[userId] || userId == auth.currentUser.uid) {
+                            const senderProfile = await getUser(userId);
+                            const tweet = {
+                                tweetId,
+                                userId,
+                                content: tweetData.content,
+                                likeCount: tweetData.likeCount,
+                            }
+                            const payload = Object.assign(senderProfile, tweet);
+                            followedUserTweets.push(payload);
+                        }
+                    }
+
+                    callback(followedUserTweets);
+                } else {
+                    console.log('No tweets found');
+                    callback([]);
+                }
+            } else {
+                console.log('No followed users found');
+                callback([]);
+            }
+        });
+        return unsubscribe;
+    } catch (error) {
+        console.error("Error fetching tweets from followed users:", error);
+        return () => { }
+    }
+}
+
+
+export const subscribeToUser = (uid, callback) => {
     const userRef = ref(db, `users/${uid}`);
 
     const unsubscribe = onValue(userRef, (snapshot) => {
@@ -53,10 +106,32 @@ export const subscribeToUser = async (uid, callback) => {
         }
     });
 
-    return () => unsubscribe;
+    return unsubscribe;
 }
 
-export const subscribeToTweets = async (callback) => {
+export const subscribeIsFollowing = (userIdToCheck, callback) => {
+    // Check if current user is following provided user
+
+    try {
+        const currentUserId = auth.currentUser.uid;
+        const userRef = ref(db, `following/${currentUserId}/${userIdToCheck}`);
+
+        const unsubscribe = onValue(userRef, (snapshot) => {
+            if (snapshot.exists()) {
+                callback(snapshot.val());
+            } else {
+                callback(false);
+            }
+        });
+
+        return unsubscribe;
+    } catch (error) {
+        console.error("Failed to attach listener to follow state:", error);
+        return () => { };
+    }
+}
+
+export const subscribeToTweets = (callback) => {
     const tweetsRef = ref(db, 'tweets');
     const unsubscribe = onValue(tweetsRef, async (snapshot) => {
         const data = snapshot.val();
@@ -68,19 +143,51 @@ export const subscribeToTweets = async (callback) => {
                     return {
                         id: key,
                         userId: tweet.userId,
-                        username: userProfile?.displayName || null,
-                        profilePicture: userProfile?.photoURL || null,
+                        displayName: userProfile?.displayName || null,
+                        photoURL: userProfile?.photoURL || null,
                         content: tweet.content,
                         likeCount: tweet.likeCount,
                         createdAt: tweet.createdAt
                     };
                 })
             );
-            callback(tweetsArray);
+            const reversedTweetsArray = tweetsArray.reverse();
+            callback(reversedTweetsArray);
         } else {
             callback([]);
         }
     });
 
-    return () => unsubscribe;
+    return unsubscribe;
+}
+
+export const followUser = (userIdToFollow) => {
+    // creates a new entry to "firebase/following/currentUserId/followedUserId"
+    // creates a new entry to "firebase/followers/followedUserId/currentUserId"
+    try {
+        const currentUserId = auth.currentUser.uid;
+        const followingRef = ref(db, `following/${currentUserId}/${userIdToFollow}`);
+        set(followingRef, true);
+
+        const followersRef = ref(db, `followers/${userIdToFollow}/${currentUserId}`)
+        set(followersRef, true);
+    } catch (error) {
+        console.error("Failed to follow user:", error);
+    }
+}
+
+export const unFollowUser = (userIdToUnfollow) => {
+    // removes or at least changes value to false at
+    // "firebase/following/currentUserId/followedUserId"
+    // and "firebase/followers/followedUserId/currentUserId"
+    try {
+        const currentUserId = auth.currentUser.uid;
+        const followingRef = ref(db, `following/${currentUserId}/${userIdToUnfollow}`);
+        remove(followingRef)
+
+        const followersRef = ref(db, `followers/${userIdToUnfollow}/${currentUserId}`)
+        remove(followersRef);
+    } catch (error) {
+        console.error("Failed to unfollow user:", error);
+    }
 }
