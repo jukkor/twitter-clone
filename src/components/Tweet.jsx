@@ -48,8 +48,9 @@ function Tweet({ id, photoURL: profilePicture, displayName: username, content, u
     return (
         <div className="tweet-box">
             <div className="user-info">
-                <img className="profile-picture" src={profilePicture} onClick={toProfile} alt="Profile profile" />
+                <img className="tweet-profile-picture" src={profilePicture} onClick={toProfile} alt="Profile profile" />
                 <h3 className="profile-username" onClick={toProfile}>{username}</h3>
+                <p className="created-at-text">{createdAt}</p>
             </div>
             <p className="tweet-text">{content}</p>
             <button onClick={handleLike} className="like-button">

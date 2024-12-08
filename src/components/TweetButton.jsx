@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { format } from 'date-fns';
+
 import { db, auth } from "../firebase/firebase";
 import { set, ref, push } from "firebase/database";
 
@@ -27,7 +29,7 @@ const TweetButton = () => {
       const newTweet = {
         content: tweetContent,
         userId: auth.currentUser.uid,
-        createdAt: new Date().toISOString(),
+        createdAt: format(new Date(), 'dd-MM-yyyy HH:mm'),
         likeCount: 0,
         media: "placeholder"
       };

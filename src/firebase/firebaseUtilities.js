@@ -147,10 +147,12 @@ export const subscribeToTweets = (callback) => {
                         photoURL: userProfile?.photoURL || null,
                         content: tweet.content,
                         likeCount: tweet.likeCount,
+                        createdAt: tweet.createdAt
                     };
                 })
             );
-            callback(tweetsArray);
+            const reversedTweetsArray = tweetsArray.reverse();
+            callback(reversedTweetsArray);
         } else {
             callback([]);
         }
