@@ -76,7 +76,8 @@ export const subscribeToTweets = async (callback) => {
                     };
                 })
             );
-            callback(tweetsArray);
+            const reversedTweetsArray = tweetsArray.reverse();
+            callback(reversedTweetsArray);
         } else {
             callback([]);
         }
