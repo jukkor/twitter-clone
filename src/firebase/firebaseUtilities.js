@@ -63,7 +63,7 @@ export const subscribeToFollowedUsersTweets = (userId, callback) => {
                     for (const [tweetId, tweetData] of Object.entries(allTweets)) {
                         const userId = tweetData.userId; // Assuming each tweet has a userId
 
-                        if (followedUsers[userId]) {
+                        if (followedUsers[userId] || userId == auth.currentUser.uid) {
                             const senderProfile = await getUser(userId);
                             const tweet = {
                                 tweetId,
