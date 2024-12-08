@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 
 import './Tweet.css';
 
-function Tweet({ id, profilePicture, username, content, userId, likeCount }) {
+function Tweet({ id, profilePicture, username, content, userId, likeCount, createdAt }) {
     const [currentLikeCount, setCurrentLikeCount] = useState(likeCount);
     const [hasLiked, setHasLiked] = useState(false);
     const navigate = useNavigate();
@@ -48,8 +48,9 @@ function Tweet({ id, profilePicture, username, content, userId, likeCount }) {
     return (
         <div className="tweet-box">
             <div className="user-info">
-                <img className="profile-picture" src={profilePicture} onClick={toProfile} alt="Profile profile" />
+                <img className="tweet-profile-picture" src={profilePicture} onClick={toProfile} alt="Profile profile" />
                 <h3 className="profile-username" onClick={toProfile}>{username}</h3>
+                <p className="created-at-text">{createdAt}</p>
             </div>
             <p className="tweet-text">{content}</p>
             <button onClick={handleLike} className="like-button">

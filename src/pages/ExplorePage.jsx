@@ -28,7 +28,8 @@ const ExplorePage = () => {
               username: userProfile?.displayName || null,
               profilePicture: userProfile?.photoURL || null,
               content: value.content,
-              likeCount: value.likeCount
+              likeCount: value.likeCount,
+              createdAt: value.createdAt
             };
           })
         );
