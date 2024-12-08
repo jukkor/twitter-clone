@@ -50,10 +50,6 @@ function Tweet({ id, photoURL: profilePicture, displayName: username, content, u
 
     }, [id, handleLike]);
 
-    const handleModal = () => {
-        
-    }
-
     return (
         <>
         <div className="tweet-box" onClick={openModal}>
@@ -63,7 +59,13 @@ function Tweet({ id, photoURL: profilePicture, displayName: username, content, u
                 <p className="created-at-text">{createdAt}</p>
             </div>
             <p className="tweet-text">{content}</p>
-            <button onClick={handleLike} className="like-button">
+            <button 
+                onClick={(e) => {
+                    e.stopPropagation();
+                    handleLike();
+                }} 
+                className="like-button"
+            >
                 {hasLiked ? 'Unlike' : 'Like'} ({currentLikeCount})
             </button>
         </div>
@@ -73,11 +75,17 @@ function Tweet({ id, photoURL: profilePicture, displayName: username, content, u
                 <div className="modal-tweet-box">
                     <div className="modal-user-info">
                         <img className="modal-tweet-profile-picture" src={profilePicture} onClick={toProfile} alt="Profile profile" />
-                        <h3 className="modal-profile-username" onClick={toProfile}>{username}</h3>
+                        <h2 className="modal-profile-username" onClick={toProfile}>{username}</h2>
                         <p className="modal-created-at-text">{createdAt}</p>
                     </div>
                     <p className="modal-tweet-text">{content}</p>
-                    <button onClick={handleLike} className="modal-like-button">
+                    <button 
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleLike();
+                        }} 
+                        className="modal-like-button"
+                    >
                         {hasLiked ? 'Unlike' : 'Like'} ({currentLikeCount})
                     </button>
                 </div>

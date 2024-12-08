@@ -25,7 +25,6 @@
 }
 
 .tweet-text {
-    border-radius: 2%;
     background-color: #2a2a2a;
     color: #c6c6c6;
     margin-left: 80px;
@@ -53,14 +52,6 @@
     color:#c6c6c6;
 }
 
-.modal-tweet-box {
-    position: fixed;
-    width: 1080px;
-    background-color: #2a2a2a;
-    border: 2px solid #FFFFFF;
-    border-radius: 5px;
-}
-
 .modal-tweet-overlay {
     position: fixed;
     top: 0;
@@ -71,13 +62,65 @@
     z-index: 1; 
 }
 
-.modal-like-button {
-    width: 5%;
-    margin-left: 80%;
+.modal-tweet-box {
+    align-items: center;
+    flex-direction: column;
+    top: 200px;
+    position: fixed;
+    margin-left: 500px;
+    padding: 20px;
+    width: 1080px;
     background-color: #2a2a2a;
-    border: 0px;
+    border: 2px solid #FFFFFF;
+    border-radius: 5px;
+    z-index: 2; 
+}
+
+.modal-user-info {
+    display: flex;
+    margin-left: 60px;
+    gap: 10px;
+}
+
+.modal-tweet-profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 1px solid #FFFFFF;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.modal-profile-username {
+    align-content: center;
+    color:#c6c6c6;
+    transform: translate(0, -15px);
+}
+
+.modal-created-at-text {
+    margin-left: auto;
+    margin-right: 30px;
+    text-align: end;
+    font-size: larger;
+    width: 100px;
+    color:#c6c6c6;
+}
+
+.modal-like-button {
+    width: 100px;
+    margin-left: 900px;
     margin-bottom: 20px;
-    font-size: medium;
+    background-color: #353535;
+    font-size: larger;
     border: 2px solid #c6c6c6;
-    border-radius: 5%;
+    border-radius: 5px;
+}
+
+.modal-tweet-text {
+    color: #c6c6c6;
+    font-size: larger;
+    margin-left: 100px;
+    margin-right: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
 }
