@@ -1,6 +1,67 @@
 import { updateProfile } from "firebase/auth";
-import { set, ref, onValue, get, remove } from "firebase/database";
+import { set, ref, onValue, get, remove, runTransaction } from "firebase/database";
 import { db, auth } from "./firebase.js"
+
+export const formatTimestamp = (timestamp) => {
+    const date = new Date(timestamp); // Automatically parses the ISO 8601 string
+
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    return `${day}-${month}-${year} ${hours}:${minutes}`;
+};
+
+export const likeTweet = (tweetId) => {
+    const likesRef = ref(db, `tweetLikes/${tweetId}/${auth.currentUser.uid}`);
+    set(likesRef, true);
+
+    const tweetRef = ref(db, `tweets/${tweetId}/likeCount`);
+    runTransaction(tweetRef, (currentValue) => {
+        return (currentValue || 0) + 1;
+    });
+}
+
+export const unLikeTweet = (tweetId) => {
+    const likesRef = ref(db, `tweetLikes/${tweetId}/${auth.currentUser.uid}`);
+    remove(likesRef);
+
+    const tweetRef = ref(db, `tweets/${tweetId}/likeCount`);
+    runTransaction(tweetRef, (currentValue) => {
+        return (currentValue || 0) - 1;
+    });
+}
+
+export const subscribeUserHasLikedTweet = (tweetId, callback) => {
+    const likesRef = ref(db, `tweetLikes/${tweetId}/${auth.currentUser.uid}`);
+
+    const unsubscribe = onValue(likesRef, (snapshot) => {
+        if (snapshot.exists()) {
+            callback(snapshot.val());
+        } else {
+            console.log('User not found');
+            callback(false);
+        }
+    });
+
+    return unsubscribe;
+}
+
+export const subscribeTweetLikeCount = (tweetId, callback) => {
+    const likesRef = ref(db, `tweets/${tweetId}/likeCount`);
+
+    const unsubscribe = onValue(likesRef, (snapshot) => {
+        if (snapshot.exists()) {
+            callback(snapshot.val());
+        } else {
+            callback(0);
+        }
+    });
+
+    return unsubscribe;
+}
 
 export const updateUser = (payload) => {
     updateAuthUser(payload);
@@ -65,12 +126,7 @@ export const subscribeToFollowedUsersTweets = (userId, callback) => {
 
                         if (followedUsers[userId] || userId == auth.currentUser.uid) {
                             const senderProfile = await getUser(userId);
-                            const tweet = {
-                                tweetId,
-                                userId,
-                                content: tweetData.content,
-                                likeCount: tweetData.likeCount,
-                            }
+                            const tweet = { ...tweetData, id: tweetId };
                             const payload = Object.assign(senderProfile, tweet);
                             followedUserTweets.push(payload);
                         }
