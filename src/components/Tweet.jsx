@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 
 import './Tweet.css';
 
-function Tweet({ id, photoURL: profilePicture, displayName: username, content, userId, likeCount }) {
+function Tweet({ id, photoURL: profilePicture, displayName: username, content, userId, likeCount, createdAt }) {
     const [currentLikeCount, setCurrentLikeCount] = useState(likeCount);
     const [hasLiked, setHasLiked] = useState(false);
     const navigate = useNavigate();
