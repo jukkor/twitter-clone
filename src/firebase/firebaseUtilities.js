@@ -72,6 +72,7 @@ export const subscribeToTweets = async (callback) => {
                         profilePicture: userProfile?.photoURL || null,
                         content: tweet.content,
                         likeCount: tweet.likeCount,
+                        createdAt: tweet.createdAt
                     };
                 })
             );
