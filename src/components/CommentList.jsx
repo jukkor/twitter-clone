@@ -2,11 +2,11 @@ import Comment from './Comment';
 
 import "./CommentList.css";
 
-const CommentList = ({ comments }) => {
+const CommentList = ({ tweetId, comments }) => {
     return (
         <div className="comment-list">
             {comments.map((comment, index) => (
-                <Comment key={index} {...comment} />
+                <Comment key={index} tweetId={tweetId} {...comment} />
             ))}
         </div>
     );

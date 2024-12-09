@@ -8,7 +8,7 @@ import CommentList from "./CommentList";
 import "./TweetModal.css";
 
 const TweetModal = ({
-  id,
+  id: tweetId,
   photoURL,
   displayName,
   content,
@@ -23,7 +23,7 @@ const TweetModal = ({
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
-    const unsubscribeComments = subscribeToTweetComments(id, setComments);
+    const unsubscribeComments = subscribeToTweetComments(tweetId, setComments);
 
     return () => {
       unsubscribeComments();
@@ -53,8 +53,8 @@ const TweetModal = ({
               </button>
             </div>
           </div>
-          <CommentBox {...{ id, photoURL }} />
-          <CommentList comments={comments} />
+          <CommentBox {...{ id: tweetId, photoURL }} />
+          <CommentList tweetId={tweetId} comments={comments} />
         </div>
       </div>
     </>
