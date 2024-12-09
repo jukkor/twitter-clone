@@ -5,6 +5,9 @@ import { useState, useEffect } from 'react';
 import './Tweet.css';
 import TweetModal from './TweetModal';
 
+import heartFilled from "../assets/favorite_24dp_filled.png";
+import heartOutline from "../assets/favorite_24dp_outline.png"
+
 function Tweet({ id, photoURL, displayName, content, userId, likeCount, createdAt }) {
     const [currentLikeCount, setCurrentLikeCount] = useState(likeCount);
     const [hasLiked, setHasLiked] = useState(false);
@@ -43,15 +46,14 @@ function Tweet({ id, photoURL, displayName, content, userId, likeCount, createdA
                     <p className="created-at-text">{formatTimestamp(createdAt)}</p>
                 </div>
                 <p className="tweet-text">{content}</p>
-                <button
-                    onClick={(e) => {
+                <div className="like-container">
+                        <p>{likeCount}</p>
+                        <img className="button-like" 
+                        onClick={(e) => {
                         e.stopPropagation();
                         handleLike();
-                    }}
-                    className="like-button"
-                >
-                    {hasLiked ? 'Unlike' : 'Like'} ({currentLikeCount})
-                </button>
+                    }} src={hasLiked ? heartFilled : heartOutline} />
+                </div>
             </div>
             {isModalOpen && <TweetModal {...{
                 id,

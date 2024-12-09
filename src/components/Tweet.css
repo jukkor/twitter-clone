@@ -34,14 +34,15 @@
     padding-right: 15px;
 }
 
-.like-button {
+.like-container {
     position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100px;
     right: 20px;
     bottom: 20px;
     background-color: #2a2a2a;
-    border: 0px;
-    font-size: medium;
     border: 2px solid #c6c6c6;
     border-radius: 5px;
 }
