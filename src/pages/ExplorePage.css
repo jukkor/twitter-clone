@@ -1,0 +1,12 @@
+.explore-header {
+    margin: 0 auto;
+    padding-bottom: 20px;
+    text-align: center;
+    width: fit-content;
+}
+
+@media (max-width: 960px) {
+    .explore-header {
+        margin-left: 250px;
+    }
+}
