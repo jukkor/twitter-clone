@@ -34,7 +34,7 @@
     padding-right: 15px;
 }
 
-.like-container {
+.tweet-like-container {
     position: absolute;
     display: flex;
     align-items: center;
@@ -45,6 +45,15 @@
     background-color: #2a2a2a;
     border: 2px solid #c6c6c6;
     border-radius: 5px;
+}
+
+.tweet-like-container p {
+    color: #FFFFFF;
+}
+
+.tweet-button-like {
+    width: 25px;
+    height: 25px;
 }
 
 .created-at-text {

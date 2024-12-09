@@ -46,13 +46,12 @@ function Tweet({ id, photoURL, displayName, content, userId, likeCount, createdA
                     <p className="created-at-text">{formatTimestamp(createdAt)}</p>
                 </div>
                 <p className="tweet-text">{content}</p>
-                <div className="like-container">
-                        <p>{likeCount}</p>
-                        <img className="button-like" 
-                        onClick={(e) => {
+                <div className="tweet-like-container" onClick={(e) => {
                         e.stopPropagation();
                         handleLike();
-                    }} src={hasLiked ? heartFilled : heartOutline} />
+                        }}>
+                        <p>{currentLikeCount}</p>
+                        <img className="tweet-button-like" src={hasLiked ? heartFilled : heartOutline} />
                 </div>
             </div>
             {isModalOpen && <TweetModal {...{

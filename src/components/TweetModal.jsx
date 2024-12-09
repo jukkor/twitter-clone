@@ -48,10 +48,13 @@ const TweetModal = ({
               <p className="modal-tweet-text">{content}</p>
             </div>
             <div className="modal-tweet-bottom-bar">
-              <div className="like-container">
-                <p>{currentLikeCount}</p>
-                <img className="button-like" onClick={handleLike} src={hasLiked ? heartFilled : heartOutline} />
-              </div>
+            <div className="modal-like-container" onClick={(e) => {
+                        e.stopPropagation();
+                        handleLike();
+                        }}>
+                        <p>{currentLikeCount}</p>
+                        <img className="modal-button-like" src={hasLiked ? heartFilled : heartOutline} />
+                </div>
             </div>
           </div>
           <CommentBox {...{ id: tweetId, photoURL }} />

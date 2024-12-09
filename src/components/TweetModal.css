@@ -74,15 +74,26 @@
     color: #c6c6c6;
 }
 
-.modal-like-button {
+.modal-like-container {
     position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
     right: 20px;
     bottom: 20px;
-    width: 100px;
-    background-color: #353535;
-    font-size: larger;
+    background-color: #2a2a2a;
     border: 2px solid #c6c6c6;
     border-radius: 5px;
+}
+.modal-like-container p {
+    color: #FFFFFF;
+}
+
+.modal-button-like {
+    width: 25px;
+    height: 25px;
+    color: #FFFFFF;
 }
 
 .modal-tweet-text {
