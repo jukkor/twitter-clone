@@ -1,17 +1,20 @@
 import { useNavigate } from 'react-router-dom';
-import { formatTimestamp, likeTweet, subscribeTweetLikeCount, subscribeUserHasLikedTweet, unLikeTweet } from "../firebase/firebaseUtilities";
+import { deleteTweet, formatTimestamp, likeTweet, subscribeTweetLikeCount, subscribeUserHasLikedTweet, unLikeTweet } from "../firebase/firebaseUtilities";
 import { useState, useEffect } from 'react';
+import { useUser } from '../contexts/UserContext';
 
 import './Tweet.css';
 import TweetModal from './TweetModal';
 
 import heartFilled from "../assets/favorite_24dp_filled.png";
-import heartOutline from "../assets/favorite_24dp_outline.png"
+import heartOutline from "../assets/favorite_24dp_outline.png";
+import deleteIcon from "../assets/delete_24dp_outline.png";
 
 function Tweet({ id, photoURL, displayName, content, userId, likeCount, createdAt }) {
     const [currentLikeCount, setCurrentLikeCount] = useState(likeCount);
     const [hasLiked, setHasLiked] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { user } = useUser();
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
@@ -25,6 +28,10 @@ function Tweet({ id, photoURL, displayName, content, userId, likeCount, createdA
     const handleLike = () => {
         if (!hasLiked) likeTweet(id);
         if (hasLiked) unLikeTweet(id);
+    }
+
+    const handleDelete = () => {
+        deleteTweet(id);
     }
 
     useEffect(() => {
@@ -44,14 +51,15 @@ function Tweet({ id, photoURL, displayName, content, userId, likeCount, createdA
                     <img className="tweet-profile-picture" src={photoURL} onClick={toProfile} alt="Profile profile" />
                     <h3 className="profile-username" onClick={toProfile}>{displayName}</h3>
                     <p className="created-at-text">{formatTimestamp(createdAt)}</p>
+                    {userId == user.uid ? <img className='delete-icon' src={deleteIcon} onClick={(e) => { e.stopPropagation(); handleDelete(); }} /> : <></>}
                 </div>
                 <p className="tweet-text">{content}</p>
                 <div className="tweet-like-container" onClick={(e) => {
-                        e.stopPropagation();
-                        handleLike();
-                        }}>
-                        <p>{currentLikeCount}</p>
-                        <img className="tweet-button-like" src={hasLiked ? heartFilled : heartOutline} />
+                    e.stopPropagation();
+                    handleLike();
+                }}>
+                    <p>{currentLikeCount}</p>
+                    <img className="tweet-button-like" src={hasLiked ? heartFilled : heartOutline} />
                 </div>
             </div>
             {isModalOpen && <TweetModal {...{

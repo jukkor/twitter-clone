@@ -11,6 +11,7 @@ const TweetBox = () => {
 
     const handleSend = () => {
         sendTweet(content);
+        setContent("");
     }
 
     return (
