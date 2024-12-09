@@ -281,7 +281,6 @@ export const subscribeIsFollowing = (userIdToCheck, callback) => {
 
         return unsubscribe;
     } catch (error) {
-        console.error("Failed to attach listener to follow state:", error);
         return () => { };
     }
 }
@@ -314,6 +313,45 @@ export const subscribeToTweets = (callback) => {
     });
 
     return unsubscribe;
+}
+
+export const subscribeFollowerCount = (id, callback) => {
+    const dataRef = ref(db, `followers/${id}`);
+
+    const unsubscribe = onValue(dataRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data != null) {
+            const followerAmount = Object.keys(data).length;
+            if (followerAmount > 0) callback(followerAmount);
+        }
+        else callback(0);
+    })
+
+    return unsubscribe;
+}
+
+export const subscribeFollowingCount = (id, callback) => {
+    const dataRef = ref(db, `following/${id}`);
+
+    const unsubscribe = onValue(dataRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data != null) {
+            const followingAmount = Object.keys(data).length;
+            if (followingAmount > 0) callback(followingAmount);
+        }
+        else callback(0);
+    })
+
+    return unsubscribe;
+}
+
+export const deleteTweet = (id) => {
+    const followingRef = ref(db, `tweets/${id}`);
+    const likesRef = ref(db, `tweetLikes/${id}`);
+    const commentsRef = ref(db, `comments/${id}`);
+    remove(followingRef);
+    remove(likesRef);
+    remove(commentsRef);
 }
 
 export const followUser = (userIdToFollow) => {

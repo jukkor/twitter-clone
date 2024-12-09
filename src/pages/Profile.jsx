@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
-import { followUser, subscribeIsFollowing, subscribeToTweets, subscribeToUser, unFollowUser } from '../firebase/firebaseUtilities';
+import { subscribeFollowerCount, subscribeFollowingCount, followUser, subscribeIsFollowing, subscribeToTweets, subscribeToUser, unFollowUser } from '../firebase/firebaseUtilities';
 
 import Sidebar from '../components/Sidebar';
 import TweetList from '../components/TweetList';
@@ -15,6 +15,8 @@ const Profile = () => {
   const navigate = useNavigate();
 
   const [userTweets, setUserTweets] = useState([]);
+  const [followerAmount, setFollowerAmount] = useState(0);
+  const [followingAmount, setFollowingAmount] = useState(0);
   const [isFollowing, setIsFollowing] = useState(false);
   const [profile, setProfile] = useState({
     displayName: 'Loading...',
@@ -22,16 +24,27 @@ const Profile = () => {
     bioText: 'Loading bio...',
   });
 
+  const getFollowersFollowing = async () => {
+    const followers = await subscribeFollowerCount(id);
+    const following = await subscribeFollowingCount(id);
+
+    setFollowerAmount(followers);
+    setFollowingAmount(following);
+  }
+
   useEffect(() => {
     const unsubscribeUser = subscribeToUser(id, setProfile);
     const unsubscribeTweets = subscribeToTweets(setUserTweets);
     const unsubscribeFollowState = subscribeIsFollowing(id, setIsFollowing);
-
+    const unsubscribeFollowerCount = subscribeFollowerCount(id, setFollowerAmount);
+    const unsubscribeFollowingCount = subscribeFollowingCount(id, setFollowingAmount);
 
     return () => {
       unsubscribeUser();
       unsubscribeTweets();
       unsubscribeFollowState();
+      unsubscribeFollowerCount();
+      unsubscribeFollowingCount();
     }
   }, [id]);
 
@@ -63,6 +76,7 @@ const Profile = () => {
             {user.uid !== id ? <button className='edit-button' onClick={handleFollow}>{isFollowing ? "Unfollow" : "Follow"}</button> : <></>}
           </div>
           <p className="bio-text">{profile.bioText}</p>
+          <h3>Followers: {followerAmount}, Following: {followingAmount}</h3>
         </div>
       </div>
       <h3 className="tweet-list-header">Tweets by {profile.displayName}:</h3>
