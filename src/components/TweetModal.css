@@ -21,7 +21,7 @@
     flex-grow: 1;
     align-items: center;
     width: 100%;
-    z-index: 102;
+    z-index: 103;
     border-radius: 5px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
