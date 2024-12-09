@@ -21,7 +21,7 @@ const Sidebar = () => {
   return (
     <>
       <div className="sidebar">
-        <h2>Twitter clone</h2>
+        <h2 className="twitter-header">Twitter clone</h2>
         <nav className="sidebar-tabs">
           <ul>
             <li className={location.pathname === "/home" ? "active-link" : ""}>
@@ -30,15 +30,12 @@ const Sidebar = () => {
             <li className={location.pathname === "/explore" ? "active-link" : ""}>
               <a href={`/explore`}>Explore</a>
             </li>
-          </ul>
-
-          <ul>
             <li className={location.pathname == `/user/${id}` ? "active-link" : ""}>
               <a href={`/user/${user.uid}`}>Profile</a>
             </li>
           </ul>
+          <TweetButton/>
         </nav>
-        <TweetButton/>
         <ul className="logout-button">
           <a onClick={handleSignOut} >Sign Out</a>
         </ul>
