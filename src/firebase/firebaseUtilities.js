@@ -1,6 +1,7 @@
 import { updateProfile } from "firebase/auth";
 import { set, ref, onValue, get, remove, runTransaction, push } from "firebase/database";
 import { db, auth } from "./firebase.js"
+import { format } from "date-fns";
 
 export const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp); // Automatically parses the ISO 8601 string
@@ -104,6 +105,26 @@ export const getUser = async (uid) => {
 export const sendComment = (tweetId, payload) => {
     const commentRef = push(ref(db, `comments/${tweetId}`));
     set(commentRef, payload);
+}
+
+export const sendTweet = (content) => {
+    if (content.length > 0) {
+        console.log("Tweet submitted");
+
+        const newTweet = {
+            content: content,
+            userId: auth.currentUser.uid,
+            createdAt: format(new Date(), 'dd-MM-yyyy HH:mm'),
+            likeCount: 0,
+            media: "placeholder"
+        };
+
+        const newTweetRef = push(ref(db, "tweets"));
+        set(newTweetRef, newTweet)
+            .catch((error) => {
+                console.log(error);
+            });
+    }
 }
 
 export const subscribeToTweetComments = (tweetId, callback) => {

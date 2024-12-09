@@ -5,6 +5,7 @@ import Sidebar from '../components/Sidebar';
 import TweetList from '../components/TweetList';
 
 import './ExplorePage.css';
+import TweetBox from '../components/TweetBox';
 
 const ExplorePage = () => {
   const [tweets, setTweets] = useState([]);
@@ -19,6 +20,7 @@ const ExplorePage = () => {
       <Sidebar />
       <div>
         <h1 className="explore-header">Explore</h1>
+        <TweetBox />
         <TweetList tweets={tweets} />
       </div>
     </>
