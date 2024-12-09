@@ -30,15 +30,12 @@ const Sidebar = () => {
             <li className={location.pathname === "/explore" ? "active-link" : ""}>
               <a href={`/explore`}>Explore</a>
             </li>
-          </ul>
-
-          <ul>
             <li className={location.pathname == `/user/${id}` ? "active-link" : ""}>
               <a href={`/user/${user.uid}`}>Profile</a>
             </li>
           </ul>
+          <TweetButton/>
         </nav>
-        <TweetButton/>
         <ul className="logout-button">
           <a onClick={handleSignOut} >Sign Out</a>
         </ul>

@@ -7,24 +7,37 @@
     overflow-x: hidden;
     position: fixed;
     background-color: #000000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .sidebar-tabs {
+    flex: 0.75;
     display: flex;
     flex-direction: column;
 }
 
 .logout-button {
-    margin-top: 150%;
+    padding: 20px;
+    text-align: center;
+}
+
+.logout-button a {
+    color: #c6c6c6;
+    text-decoration: none;
+    font-size: large;
+    cursor: pointer;
 }
 
 .tweet-button {
     margin-left: 50px;
-    border-radius: 3%;
+    border-radius: 5px;
     background-color: rgb(32, 32, 179);
     color: #c6c6c6;
     font-size: xx-large;
-    width: 60%;
+    width: 180px;
+    cursor: pointer;
 }
 
 h1 {
