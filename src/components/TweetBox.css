@@ -29,6 +29,7 @@
 .comment-area img,
 textarea {
     margin: 5px;
+    border-radius: 25px;
 }
 
 .comment-area textarea {
