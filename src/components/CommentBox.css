@@ -1,0 +1,39 @@
+.comment-box {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+    width: 100%;
+    max-width: 750px;
+    background-color: #2a2a2a;
+    border: 2px solid #FFFFFF;
+    border-radius: 5px;
+    z-index: 2;
+}
+
+.comment-area {
+    display: flex;
+    width: 100%;
+    margin: 16px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.comment-area img,
+textarea {
+    margin: 5px;
+}
+
+.comment-area textarea {
+    height: 100px;
+}
+
+.button-send {
+    border-radius: 25px;
+    width: 150px;
+}

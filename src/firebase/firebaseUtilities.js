@@ -1,12 +1,12 @@
 import { updateProfile } from "firebase/auth";
-import { set, ref, onValue, get, remove, runTransaction } from "firebase/database";
+import { set, ref, onValue, get, remove, runTransaction, push } from "firebase/database";
 import { db, auth } from "./firebase.js"
 
 export const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp); // Automatically parses the ISO 8601 string
 
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1
+    const day = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1
+    const month = String(date.getDate()).padStart(2, '0');
     const year = date.getFullYear();
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
@@ -41,7 +41,6 @@ export const subscribeUserHasLikedTweet = (tweetId, callback) => {
         if (snapshot.exists()) {
             callback(snapshot.val());
         } else {
-            console.log('User not found');
             callback(false);
         }
     });
@@ -102,6 +101,85 @@ export const getUser = async (uid) => {
     }
 }
 
+export const sendComment = (tweetId, payload) => {
+    const commentRef = push(ref(db, `comments/${tweetId}`));
+    set(commentRef, payload);
+}
+
+export const subscribeToTweetComments = (tweetId, callback) => {
+    try {
+        const commentRef = ref(db, `comments/${tweetId}`)
+
+        const unsubscribe = onValue(commentRef, async (snapshot) => {
+            if (snapshot.exists()) {
+                const commentsSnapshot = snapshot.val();
+                const comments = [];
+
+                for (const [commentId, commentData] of Object.entries(commentsSnapshot)) {
+                    const senderProfile = await getUser(commentData.userId);
+                    const comment = { ...commentData, id: commentId }
+                    const payload = Object.assign(senderProfile, comment);
+                    comments.push(payload);
+                }
+
+                callback(comments);
+            }
+        });
+
+        return unsubscribe;
+    } catch (error) {
+        console.error("Error fetching tweets from followed users:", error);
+        return () => { }
+    }
+}
+
+export const subscribeCommentLikeCount = (tweetId, commentId, callback) => {
+    const likesRef = ref(db, `comments/${tweetId}/${commentId}/likeCount`);
+
+    const unsubscribe = onValue(likesRef, (snapshot) => {
+        if (snapshot.exists()) {
+            callback(snapshot.val());
+        } else {
+            callback(0);
+        }
+    });
+
+    return unsubscribe;
+}
+
+export const subscribeHasLikedComment = (commentId, callback) => {
+    const likesRef = ref(db, `commentLikes/${commentId}/${auth.currentUser.uid}`);
+
+    const unsubscribe = onValue(likesRef, (snapshot) => {
+        if (snapshot.exists()) {
+            callback(snapshot.val());
+        } else {
+            callback(false);
+        }
+    });
+
+    return unsubscribe;
+}
+
+export const likeComment = (tweetId, commentId) => {
+    const likesRef = ref(db, `commentLikes/${commentId}/${auth.currentUser.uid}`);
+    set(likesRef, true);
+
+    const tweetRef = ref(db, `comments/${tweetId}/${commentId}/likeCount`);
+    runTransaction(tweetRef, (currentValue) => {
+        return (currentValue || 0) + 1;
+    });
+}
+
+export const unLikeComment = (tweetId, commentId) => {
+    const likesRef = ref(db, `commentLikes/${commentId}/${auth.currentUser.uid}`);
+    remove(likesRef);
+
+    const tweetRef = ref(db, `comments/${tweetId}/${commentId}/likeCount`);
+    runTransaction(tweetRef, (currentValue) => {
+        return (currentValue || 0) - 1;
+    });
+}
 
 export const subscribeToFollowedUsersTweets = (userId, callback) => {
     try {
@@ -132,7 +210,7 @@ export const subscribeToFollowedUsersTweets = (userId, callback) => {
                         }
                     }
                     const reversedTweetArray = followedUserTweets.reverse();
-                    callback(reversedTweetArray);
+                    callback(reversedTweetArray)
                 } else {
                     console.log('No tweets found');
                     callback([]);
