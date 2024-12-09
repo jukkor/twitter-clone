@@ -162,7 +162,7 @@ export const subscribeToFollowedUsersTweets = (userId, callback) => {
                             followedUserTweets.push(payload);
                         }
                     }
-
+                    const reversedTweetArray = followedUserTweets.reverse();
                     callback(followedUserTweets);
                 } else {
                     console.log('No tweets found');
