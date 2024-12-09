@@ -31,7 +31,7 @@ const Comment = ({ tweetId, id, photoURL, displayName, content }) => {
         <>
             <div className="comment-container">
                 <div className="comment-sender">
-                    <img src={photoURL} />
+                    <img className="comment-avatar" src={photoURL} />
                     <h3>{displayName}</h3>
                 </div>
                 <div className="comment-content">
