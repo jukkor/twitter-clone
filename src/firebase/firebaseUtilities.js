@@ -41,7 +41,6 @@ export const subscribeUserHasLikedTweet = (tweetId, callback) => {
         if (snapshot.exists()) {
             callback(snapshot.val());
         } else {
-            console.log('User not found');
             callback(false);
         }
     });
@@ -132,6 +131,54 @@ export const subscribeToTweetComments = (tweetId, callback) => {
         console.error("Error fetching tweets from followed users:", error);
         return () => { }
     }
+}
+
+export const subscribeCommentLikeCount = (tweetId, commentId, callback) => {
+    const likesRef = ref(db, `comments/${tweetId}/${commentId}/likeCount`);
+
+    const unsubscribe = onValue(likesRef, (snapshot) => {
+        if (snapshot.exists()) {
+            callback(snapshot.val());
+        } else {
+            callback(0);
+        }
+    });
+
+    return unsubscribe;
+}
+
+export const subscribeHasLikedComment = (commentId, callback) => {
+    const likesRef = ref(db, `commentLikes/${commentId}/${auth.currentUser.uid}`);
+
+    const unsubscribe = onValue(likesRef, (snapshot) => {
+        if (snapshot.exists()) {
+            callback(snapshot.val());
+        } else {
+            callback(false);
+        }
+    });
+
+    return unsubscribe;
+}
+
+export const likeComment = (tweetId, commentId) => {
+    const likesRef = ref(db, `commentLikes/${commentId}/${auth.currentUser.uid}`);
+    set(likesRef, true);
+
+    const tweetRef = ref(db, `comments/${tweetId}/${commentId}/likeCount`);
+    runTransaction(tweetRef, (currentValue) => {
+        return (currentValue || 0) + 1;
+    });
+}
+
+export const unLikeComment = (tweetId, commentId) => {
+    const likesRef = ref(db, `commentLikes/${commentId}/${auth.currentUser.uid}`);
+    remove(likesRef);
+
+    const tweetRef = ref(db, `comments/${tweetId}/${commentId}/likeCount`);
+    runTransaction(tweetRef, (currentValue) => {
+        return (currentValue || 0) - 1;
+    });
 }
 
 export const subscribeToFollowedUsersTweets = (userId, callback) => {
