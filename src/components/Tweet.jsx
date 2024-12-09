@@ -3,8 +3,9 @@ import { formatTimestamp, likeTweet, subscribeTweetLikeCount, subscribeUserHasLi
 import { useState, useEffect } from 'react';
 
 import './Tweet.css';
+import TweetModal from './TweetModal';
 
-function Tweet({ id, photoURL: profilePicture, displayName: username, content, userId, likeCount, createdAt }) {
+function Tweet({ id, photoURL, displayName, content, userId, likeCount, createdAt }) {
     const [currentLikeCount, setCurrentLikeCount] = useState(likeCount);
     const [hasLiked, setHasLiked] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,46 +36,33 @@ function Tweet({ id, photoURL: profilePicture, displayName: username, content, u
 
     return (
         <>
-        <div className="tweet-box" onClick={openModal}>
-            <div className="user-info">
-                <img className="tweet-profile-picture" src={profilePicture} onClick={toProfile} alt="Profile profile" />
-                <h3 className="profile-username" onClick={toProfile}>{username}</h3>
-                <p className="created-at-text">{formatTimestamp(createdAt)}</p>
-            </div>
-            <p className="tweet-text">{content}</p>
-            <button 
-                onClick={(e) => {
-                    e.stopPropagation();
-                    handleLike();
-                }} 
-                className="like-button"
-            >
-                {hasLiked ? 'Unlike' : 'Like'} ({currentLikeCount})
-            </button>
-        </div>
-        {isModalOpen && (
-            <>
-              <div className="modal-tweet-overlay" onClick={closeModal}></div>
-                <div className="modal-tweet-box">
-                    <div className="modal-user-info">
-                        <img className="modal-tweet-profile-picture" src={profilePicture} onClick={toProfile} alt="Profile profile" />
-                        <h2 className="modal-profile-username" onClick={toProfile}>{username}</h2>
-                        <p className="modal-created-at-text">{createdAt}</p>
-                    </div>
-                    <p className="modal-tweet-text">{content}</p>
-                    <button 
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleLike();
-                        }} 
-                        className="modal-like-button"
-                    >
-                        {hasLiked ? 'Unlike' : 'Like'} ({currentLikeCount})
-                    </button>
+            <div className="tweet-box" onClick={openModal}>
+                <div className="user-info">
+                    <img className="tweet-profile-picture" src={photoURL} onClick={toProfile} alt="Profile profile" />
+                    <h3 className="profile-username" onClick={toProfile}>{displayName}</h3>
+                    <p className="created-at-text">{formatTimestamp(createdAt)}</p>
                 </div>
-            </>
-          )}
-          </>
+                <p className="tweet-text">{content}</p>
+                <button
+                    onClick={handleLike}
+                    className="like-button"
+                >
+                    {hasLiked ? 'Unlike' : 'Like'} ({currentLikeCount})
+                </button>
+            </div>
+            {isModalOpen && <TweetModal {...{
+                id,
+                photoURL,
+                displayName,
+                content,
+                currentLikeCount,
+                createdAt,
+                hasLiked,
+                toProfile,
+                handleLike,
+                closeModal
+            }} />}
+        </>
     )
 }
 

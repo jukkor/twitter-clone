@@ -1,12 +1,12 @@
 import { updateProfile } from "firebase/auth";
-import { set, ref, onValue, get, remove, runTransaction } from "firebase/database";
+import { set, ref, onValue, get, remove, runTransaction, push } from "firebase/database";
 import { db, auth } from "./firebase.js"
 
 export const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp); // Automatically parses the ISO 8601 string
 
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1
+    const day = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1
+    const month = String(date.getDate()).padStart(2, '0');
     const year = date.getFullYear();
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
@@ -102,6 +102,37 @@ export const getUser = async (uid) => {
     }
 }
 
+export const sendComment = (tweetId, payload) => {
+    const commentRef = push(ref(db, `comments/${tweetId}`));
+    set(commentRef, payload);
+}
+
+export const subscribeToTweetComments = (tweetId, callback) => {
+    try {
+        const commentRef = ref(db, `comments/${tweetId}`)
+
+        const unsubscribe = onValue(commentRef, async (snapshot) => {
+            if (snapshot.exists()) {
+                const commentsSnapshot = snapshot.val();
+                const comments = [];
+
+                for (const [commentId, commentData] of Object.entries(commentsSnapshot)) {
+                    const senderProfile = await getUser(commentData.userId);
+                    const comment = { ...commentData, id: commentId }
+                    const payload = Object.assign(senderProfile, comment);
+                    comments.push(payload);
+                }
+
+                callback(comments);
+            }
+        });
+
+        return unsubscribe;
+    } catch (error) {
+        console.error("Error fetching tweets from followed users:", error);
+        return () => { }
+    }
+}
 
 export const subscribeToFollowedUsersTweets = (userId, callback) => {
     try {

@@ -1,0 +1,30 @@
+.comment-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #181818;
+    border: solid, 1px, white;
+    width: 100%;
+    color: #c6c6c6;
+    padding: 16px;
+}
+
+.comment-sender {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.comment-sender img,
+h3 {
+    margin: 5px;
+}
+
+.comment-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.button-like {
+    width: 60px;
+}
