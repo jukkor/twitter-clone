@@ -4,6 +4,8 @@ import { subscribeToTweets } from '../firebase/firebaseUtilities';
 import Sidebar from '../components/Sidebar';
 import TweetList from '../components/TweetList';
 
+import './ExplorePage.css';
+
 const ExplorePage = () => {
   const [tweets, setTweets] = useState([]);
 
@@ -16,7 +18,7 @@ const ExplorePage = () => {
     <>
       <Sidebar />
       <div>
-        <h1>Explore Page</h1>
+        <h1 className="explore-header">Explore</h1>
         <TweetList tweets={tweets} />
       </div>
     </>
