@@ -7,7 +7,7 @@ const EmailLoginModal = ({ handleOnClose, handleOnClick }) => {
     const [password, setPassword] = useState('');
 
     return (
-        <div className="modal">
+        <div className="email-modal">
             <div className="modal-content">
                 <h3>Email</h3>
                 <input
