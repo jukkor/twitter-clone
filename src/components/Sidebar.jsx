@@ -21,7 +21,7 @@ const Sidebar = () => {
   return (
     <>
       <div className="sidebar">
-        <h2>Twitter clone</h2>
+        <h2 className="twitter-header">Twitter clone</h2>
         <nav className="sidebar-tabs">
           <ul>
             <li className={location.pathname === "/home" ? "active-link" : ""}>
