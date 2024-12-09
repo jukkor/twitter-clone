@@ -5,13 +5,18 @@ import { auth } from '../firebase/firebase';
 import Sidebar from '../components/Sidebar';
 import TweetList from '../components/TweetList';
 import { useUser } from '../contexts/UserContext';
+import TweetBox from '../components/TweetBox';
 
 const HomePage = () => {
   const [followedUserTweets, setFollowedUserTweets] = useState([]);
   const { user } = useUser();
 
   useEffect(() => {
-    subscribeToFollowedUsersTweets(user.uid, setFollowedUserTweets);
+    const unsubscribe = subscribeToFollowedUsersTweets(user.uid, setFollowedUserTweets);
+
+    return () => {
+      unsubscribe();
+    }
   }, []);
 
   return (
@@ -20,6 +25,7 @@ const HomePage = () => {
       <div>
         <h1>Home page</h1>
       </div>
+      <TweetBox />
       {followedUserTweets
         ? <>
           <div>

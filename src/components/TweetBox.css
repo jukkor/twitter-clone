@@ -1,0 +1,82 @@
+.tweet-sending-box {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: auto;
+    margin-bottom: 20px;
+    padding: 20px;
+    width: 100%;
+    max-width: 680px;
+    background-color: #2a2a2a;
+    border: 2px solid #FFFFFF;
+    border-radius: 5px;
+    z-index: 2;
+}
+
+.comment-area {
+    display: flex;
+    width: 100%;
+    margin: 16px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.comment-area img,
+textarea {
+    margin: 5px;
+}
+
+.comment-area textarea {
+    height: 100px;
+}
+
+.button-send {
+    border-radius: 25px;
+    width: 150px;
+}
+
+@media (max-width: 1280px) {
+    .tweet-sending-box {
+        margin-left: 250px;
+    }
+
+}
+
+@media (max-width: 1080px) {
+    .tweet-sending-box {
+        margin-left: 250px;
+        width: 65%;
+    }
+}
+
+@media (max-width: 760px) {
+    .tweet-sending-box {
+        width: 250px;
+    }
+
+    .tweet-text {
+        margin-left: 20px;
+        margin-right: 20px;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .like-button {
+        position: absolute;
+        width: 60px;
+        right: 20px;
+        bottom: 10px;
+        background-color: #2a2a2a;
+        border: 0px;
+        margin-bottom: 10px;
+        font-size: medium;
+        border: 2px solid #c6c6c6;
+        border-radius: 5%;
+    }
+
+}
