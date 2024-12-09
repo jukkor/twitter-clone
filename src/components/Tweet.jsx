@@ -44,7 +44,10 @@ function Tweet({ id, photoURL, displayName, content, userId, likeCount, createdA
                 </div>
                 <p className="tweet-text">{content}</p>
                 <button
-                    onClick={handleLike}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handleLike();
+                    }}
                     className="like-button"
                 >
                     {hasLiked ? 'Unlike' : 'Like'} ({currentLikeCount})
